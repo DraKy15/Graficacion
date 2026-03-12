@@ -1,0 +1,50 @@
+import cv2 as cv
+import numpy as np
+
+
+
+# MISIÓN 1: El Mensaje Subexpuesto (Operadores Puntuales)
+
+#--------------------------------------------------------------------------
+
+img = cv.imread('C:\\Users\\ameti\\Pictures\\m1_oscura.png', cv.IMREAD_GRAYSCALE)
+
+# --- MODO RAW ---
+
+for i in range(img.shape[0]):
+    for j in range(img.shape[1]):
+        img[i, j] = img[i, j] * 50
+
+cv.imshow('Imagen Raw',img)
+
+# --- MODO OPENCV ---
+# Usa la magia de la vectorización
+img_CV = cv.multiply(img, 50)
+cv.imshow('Imagen OpenCV',img_CV)
+cv.imshow('Imagen Original', img)
+cv.waitKey(0)  
+cv.destroyAllWindows()
+
+
+#--------------------------------------------------------------------------
+
+# MISIÓN 2: El QR Fragmentado (Transformaciones Geométricas)
+
+lienzo=np.zeros((400, 400, 3), dtype=np.uint8)
+
+mitad1 = cv.imread('C:\\Users\\ameti\\Pictures\\m2_mitad1.png')
+mitad2 = cv.imread('C:\\Users\\ameti\\Pictures\\m2_mitad2.png')
+
+
+#La mitad 1 debe ser trasladada al origen (0,0).
+cv.warpAffine(mitad1, cv.getRotationMatrix2D((0, 0), 0, 1.0), (400, 400), dst=lienzo, borderMode=cv.BORDER_TRANSPARENT)
+
+#La mitad 2 debe ser rotada 180 grados sobre su propio centro y colocada en la parte inferior del lienzo.
+np.angle=180
+cv.warpAffine(mitad2, cv.getRotationMatrix2D((mitad2.shape[1]//2, mitad2.shape[0]//2), np.angle, 1.0), (400, 400), dst=lienzo, borderMode=cv.BORDER_TRANSPARENT)
+
+#Unir las dos mitades en el lienzo final para revelar el código QR completo
+codigo_qr = lienzo
+cv.imshow('Codigo QR Unido', codigo_qr)
+cv.waitKey(0)
+cv.destroyAllWindows()
